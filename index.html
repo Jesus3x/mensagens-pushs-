@@ -28,7 +28,6 @@
         return;
       }
 
-      // Envia mensagem para o Service Worker exibir a notificação
       if (navigator.serviceWorker.controller) {
         navigator.serviceWorker.controller.postMessage('show-notification');
       }
