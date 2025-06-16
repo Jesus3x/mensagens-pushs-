@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Notificação Push com Service Worker</title>
+</head>
+<body>
+  <h1>Notificação Push com Service Worker</h1>
+  <button id="notifyBtn">Enviar Notificação</button>
+
+  <script>
+    if ('serviceWorker' in navigator && 'Notification' in window) {
+      navigator.serviceWorker.register('sw.js').then(registration => {
+        console.log('Service Worker registrado com sucesso!', registration);
+      }).catch(err => {
+        console.error('Falha ao registrar Service Worker:', err);
+      });
+    } else {
+      alert('Seu navegador não suporta Service Worker ou Notificações.');
+    }
+
+    const notifyBtn = document.getElementById('notifyBtn');
+
+    notifyBtn.addEventListener('click', async () => {
+      const permission = await Notification.requestPermission();
+      if (permission !== 'granted') {
+        alert('Permissão para notificações negada.');
+        return;
+      }
+
+      // Envia mensagem para o Service Worker exibir a notificação
+      if (navigator.serviceWorker.controller) {
+        navigator.serviceWorker.controller.postMessage('show-notification');
+      }
+    });
+  </script>
+</body>
+</html>
